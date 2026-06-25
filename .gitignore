@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual env
+venv/
+
+# Secrets
+config/config.json
+frontend/extension.json
+
+# Testing
+test_pipeline.sh
+# OS
+.DS_Store

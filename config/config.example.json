@@ -1,0 +1,8 @@
+{
+  "SASE_API_KEY": "YOUR_KEY_HERE",
+  "SASE_AUTH_URL": "https://api.eu.sase.checkpoint.com/api/v1/auth/authorize",
+  "SASE_BASE_URL": "https://api.eu.sase.checkpoint.com/api/rest",
+  "MGMT_URL": "https://your-management/web_api",
+  "MGMT_API_KEY": "YOUR_KEY_HERE",
+  "VERIFY_TLS": false
+}
