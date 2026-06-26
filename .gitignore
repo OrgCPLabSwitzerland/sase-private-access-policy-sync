@@ -4,6 +4,7 @@ __pycache__/
 
 # Virtual env
 venv/
+.venv/
 
 # Secrets
 config/config.json
@@ -11,5 +12,8 @@ frontend/extension.json
 
 # Testing
 test_pipeline.sh
+# VS Code
+.vscode/
+
 # OS
 .DS_Store
