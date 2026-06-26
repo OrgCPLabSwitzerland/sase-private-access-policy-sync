@@ -20,11 +20,11 @@ BASE_URL = config["SASE_BASE_URL"]
 _token_cache = None
 
 
-def get_token():
-    """Get API token (cached)."""
+def get_token(force_refresh=False):
+    """Get API token (cached). Use force_refresh=True to re-authenticate."""
     global _token_cache
 
-    if _token_cache:
+    if _token_cache and not force_refresh:
         return _token_cache
 
     r = requests.post(
@@ -55,7 +55,7 @@ def get_token():
 
 
 def sase_request(method, path, payload=None):
-    """Generic SASE API wrapper."""
+    """Generic SASE API wrapper. Retries once on 401 (token expired)."""
     if not path.startswith("/"):
         path = "/" + path
 
@@ -72,6 +72,21 @@ def sase_request(method, path, payload=None):
         json=payload,
         verify=False
     )
+
+    # Token expired — refresh and retry once
+    if r.status_code == 401:
+        token = get_token(force_refresh=True)
+        r = requests.request(
+            method,
+            BASE_URL + path,
+            headers={
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            json=payload,
+            verify=False
+        )
 
     if not r.ok:
         raise RuntimeError(
