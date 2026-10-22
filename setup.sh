@@ -31,25 +31,17 @@ pause
 if [ ! -f config/config.json ]; then
     echo ""
     echo "⚠️  config/config.json not found"
-    echo "➡️  Let's configure it interactively (press Enter to accept the default in [brackets]):"
+    echo "➡️  Let's configure it interactively:"
     echo ""
 
-    read -s -p "   SASE API Key: " SASE_API_KEY
-    echo ""
-    read -p "   SASE Auth URL [https://api.eu.sase.checkpoint.com/api/v1/auth/authorize]: " SASE_AUTH_URL
-    SASE_AUTH_URL="${SASE_AUTH_URL:-https://api.eu.sase.checkpoint.com/api/v1/auth/authorize}"
-    read -p "   SASE Base URL [https://api.eu.sase.checkpoint.com/api/rest]: " SASE_BASE_URL
-    SASE_BASE_URL="${SASE_BASE_URL:-https://api.eu.sase.checkpoint.com/api/rest}"
-    read -p "   Management API URL (e.g. https://<mgmt-server>/web_api): " MGMT_URL
-    read -s -p "   Management API Key: " MGMT_API_KEY
-    echo ""
-    read -p "   Verify TLS certificates on outgoing API calls? [y/N]: " VERIFY_TLS_ANSWER
+    read -p "   SASE API Key: " SASE_API_KEY
+    read -p "   Management server IP/hostname: " MGMT_HOST
+    read -p "   Management API Key: " MGMT_API_KEY
 
-    if [[ "$VERIFY_TLS_ANSWER" =~ ^[Yy]$ ]]; then
-        VERIFY_TLS="true"
-    else
-        VERIFY_TLS="false"
-    fi
+    SASE_AUTH_URL="https://api.eu.sase.checkpoint.com/api/v1/auth/authorize"
+    SASE_BASE_URL="https://api.eu.sase.checkpoint.com/api/rest"
+    MGMT_URL="https://${MGMT_HOST}/web_api"
+    VERIFY_TLS="false"
 
     python3 -c "
 import json, sys
