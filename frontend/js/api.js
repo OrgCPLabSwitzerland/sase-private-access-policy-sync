@@ -10,7 +10,7 @@ async function validatePolicy() {
     try {
         output.innerText = "Validating policy...";
 
-        const res = await fetch("https://172.31.100.201:5000/validate-policy");
+        const res = await fetch("/validate-policy");
 
         if (!res.ok) {
             throw new Error("HTTP " + res.status);
@@ -96,7 +96,7 @@ async function installPolicy(networkId) {
     try {
         output.innerText = "Installing policy...";
 
-        const res = await fetch(`https://172.31.100.201:5000/install-policy?network_id=${networkId}`);
+        const res = await fetch(`/install-policy?network_id=${networkId}`);
 
         if (!res.ok) {
             throw new Error("HTTP " + res.status);
@@ -135,7 +135,7 @@ async function loadNetworks() {
     const output = document.getElementById("output");
 
     try {
-        const res = await fetch("https://172.31.100.201:5000/get-networks");
+        const res = await fetch("/get-networks");
         const data = await res.json();
 
         if (data.status !== "success") {
