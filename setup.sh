@@ -59,6 +59,48 @@ if [ ! -f frontend/extension.json ]; then
     echo "Replace <YOUR-SERVER> with your actual IP or hostname!"
 fi
 
+# Generate self-signed TLS certificate matching this server
+echo ""
+if [ -f certs/cert.pem ] && [ -f certs/key.pem ]; then
+    echo "✅ certs/cert.pem and certs/key.pem already exist"
+    echo "⚠️  If this server's IP/hostname has changed since the certificate was created, clients will reject it (hostname mismatch) and it must be regenerated."
+    read -p "➡️  Regenerate self-signed certificate now? [y/N] (N = keep existing certificate) " REGEN_CERT
+else
+    echo "⚠️  certs/cert.pem / certs/key.pem not found"
+    REGEN_CERT="y"
+fi
+
+if [[ "$REGEN_CERT" =~ ^[Yy]$ ]]; then
+    if ! command -v openssl &> /dev/null; then
+        echo "⚠️  openssl not found, skipping certificate generation."
+        echo "👉 Generate certs/cert.pem and certs/key.pem manually before starting the app."
+    else
+        read -p "➡️  Enter the IP or hostname clients will use to reach this backend: " CERT_HOST
+
+        if [ -z "$CERT_HOST" ]; then
+            echo "⚠️  No value provided, skipping certificate generation."
+        else
+            mkdir -p certs
+
+            # SAN type must match how clients will address this server (IP vs DNS name)
+            if [[ "$CERT_HOST" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+                SAN="IP:${CERT_HOST}"
+            else
+                SAN="DNS:${CERT_HOST}"
+            fi
+
+            openssl req -x509 -nodes -newkey rsa:2048 -days 825 \
+                -keyout certs/key.pem -out certs/cert.pem \
+                -subj "/CN=${CERT_HOST}" \
+                -addext "subjectAltName=${SAN}"
+
+            echo ""
+            echo "✅ Self-signed certificate generated for: ${CERT_HOST}"
+            echo "⚠️  Self-signed certs aren't trusted by default; clients (browser/SmartConsole) may need to accept/import it."
+        fi
+    fi
+fi
+
 echo ""
 echo "----------------------------------------"
 echo "⚠️  SmartConsole setup required"
@@ -116,12 +158,17 @@ EOF
         echo ""
         echo "✅ systemd service installed and started: sase-private-access.service"
         echo "👉 Manage it with: sudo systemctl {status|stop|restart} sase-private-access.service"
+        SERVICE_INSTALLED=1
     fi
 fi
 
 echo ""
 echo "✅ Setup complete"
 echo ""
-echo "To start the app:"
-echo "source venv/bin/activate && ./start.sh"
+if [ "$SERVICE_INSTALLED" = "1" ]; then
+    echo "The backend is already running as a systemd service."
+else
+    echo "To start the app:"
+    echo "source venv/bin/activate && ./start.sh"
+fi
 echo "----------------------------------------"
