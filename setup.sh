@@ -4,6 +4,11 @@ echo "-------------------------------------------"
 echo "Setting up SASE PA Unified Policy Extension"
 echo "-------------------------------------------"
 
+pause() {
+    echo ""
+    read -p "⏸️  Press Enter to continue..." _
+}
+
 # Create venv
 if [ ! -d venv ]; then
     echo ""
@@ -17,6 +22,10 @@ echo ""
 echo "➡️  Installing Python dependencies..."
 pip install --upgrade pip
 pip install -r requirements.txt
+
+echo ""
+echo "✅ Virtual environment ready and dependencies installed"
+pause
 
 # Create config if missing
 if [ ! -f config/config.json ]; then
@@ -64,6 +73,7 @@ else
     echo ""
     echo "✅ config/config.json already exists"
 fi
+pause
 
 # Create extension.json if missing
 if [ ! -f frontend/extension.json ]; then
@@ -86,6 +96,7 @@ if [ ! -f frontend/extension.json ]; then
 
     echo "----------------------------------------"
 fi
+pause
 
 # Generate self-signed TLS certificate matching this server
 echo ""
@@ -133,6 +144,7 @@ if [[ "$REGEN_CERT" =~ ^[Yy]$ ]]; then
         fi
     fi
 fi
+pause
 
 echo ""
 echo "----------------------------------------"
@@ -149,6 +161,7 @@ echo "----------------------------------------"
 echo ""
 echo "➡️ Load extension in SmartConsole:"
 echo "https://<YOUR-SERVER>:5000/extension.json"
+pause
 
 # Create systemd service
 chmod +x start.sh
