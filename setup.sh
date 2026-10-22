@@ -75,6 +75,50 @@ echo ""
 echo "➡️ Load extension in SmartConsole:"
 echo "https://<YOUR-SERVER>:5000/extension.json"
 
+# Create systemd service
+chmod +x start.sh
+
+echo ""
+read -p "➡️  Install and enable a systemd service to auto-start the backend on boot? [y/N] " INSTALL_SERVICE
+
+if [[ "$INSTALL_SERVICE" =~ ^[Yy]$ ]]; then
+    if [ "$EUID" -ne 0 ] && ! command -v sudo &> /dev/null; then
+        echo "⚠️  sudo is required to install the systemd service. Skipping."
+    else
+        SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+        SERVICE_USER="${SUDO_USER:-$(whoami)}"
+        SERVICE_FILE="/etc/systemd/system/sase-private-access.service"
+
+        SUDO=""
+        [ "$EUID" -ne 0 ] && SUDO="sudo"
+
+        $SUDO tee "$SERVICE_FILE" > /dev/null <<EOF
+[Unit]
+Description=SASE Private Access Policy Sync
+After=network.target
+
+[Service]
+Type=simple
+User=${SERVICE_USER}
+WorkingDirectory=${SCRIPT_DIR}
+ExecStart=${SCRIPT_DIR}/start.sh
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+        $SUDO systemctl daemon-reload
+        $SUDO systemctl enable sase-private-access.service
+        $SUDO systemctl start sase-private-access.service
+
+        echo ""
+        echo "✅ systemd service installed and started: sase-private-access.service"
+        echo "👉 Manage it with: sudo systemctl {status|stop|restart} sase-private-access.service"
+    fi
+fi
+
 echo ""
 echo "✅ Setup complete"
 echo ""

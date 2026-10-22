@@ -2,7 +2,8 @@
 
 echo "[INFO] Starting Smart-1 Extension: SASE Unified PA Policy..."
 
-cd /home/admin/sase-unified-pa-policy
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
 
 # Activate venv
 source venv/bin/activate
