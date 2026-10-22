@@ -22,22 +22,44 @@ pip install -r requirements.txt
 if [ ! -f config/config.json ]; then
     echo ""
     echo "⚠️  config/config.json not found"
-    echo "➡️  Creating from template..."
+    echo "➡️  Let's configure it interactively (press Enter to accept the default in [brackets]):"
+    echo ""
 
-    cp config/config.example.json config/config.json
+    read -s -p "   SASE API Key: " SASE_API_KEY
+    echo ""
+    read -p "   SASE Auth URL [https://api.eu.sase.checkpoint.com/api/v1/auth/authorize]: " SASE_AUTH_URL
+    SASE_AUTH_URL="${SASE_AUTH_URL:-https://api.eu.sase.checkpoint.com/api/v1/auth/authorize}"
+    read -p "   SASE Base URL [https://api.eu.sase.checkpoint.com/api/rest]: " SASE_BASE_URL
+    SASE_BASE_URL="${SASE_BASE_URL:-https://api.eu.sase.checkpoint.com/api/rest}"
+    read -p "   Management API URL (e.g. https://<mgmt-server>/web_api): " MGMT_URL
+    read -s -p "   Management API Key: " MGMT_API_KEY
+    echo ""
+    read -p "   Verify TLS certificates on outgoing API calls? [y/N]: " VERIFY_TLS_ANSWER
+
+    if [[ "$VERIFY_TLS_ANSWER" =~ ^[Yy]$ ]]; then
+        VERIFY_TLS="true"
+    else
+        VERIFY_TLS="false"
+    fi
+
+    python3 -c "
+import json, sys
+path, sase_key, auth_url, base_url, mgmt_url, mgmt_key, verify_tls = sys.argv[1:8]
+config = {
+    'SASE_API_KEY': sase_key,
+    'SASE_AUTH_URL': auth_url,
+    'SASE_BASE_URL': base_url,
+    'MGMT_URL': mgmt_url,
+    'MGMT_API_KEY': mgmt_key,
+    'VERIFY_TLS': verify_tls == 'true'
+}
+with open(path, 'w') as f:
+    json.dump(config, f, indent=2)
+    f.write('\n')
+" "config/config.json" "$SASE_API_KEY" "$SASE_AUTH_URL" "$SASE_BASE_URL" "$MGMT_URL" "$MGMT_API_KEY" "$VERIFY_TLS"
 
     echo ""
     echo "✅ config/config.json created!"
-    echo ""
-    echo "👉 Please update it with your API keys and URLs:"
-    echo "----------------------------------------"
-
-    cat config/config.json
-
-    echo "----------------------------------------"
-    echo ""
-    echo "⚠️  IMPORTANT:"
-    echo "Edit config/config.json before running the application!"
 else
     echo ""
     echo "✅ config/config.json already exists"
@@ -47,22 +69,22 @@ fi
 if [ ! -f frontend/extension.json ]; then
     echo ""
     echo "⚠️  frontend/extension.json not found"
-    echo "➡️  Creating from template..."
+    read -p "➡️  Enter the IP or hostname clients (SmartConsole) will use to reach this backend: " SERVER_HOST
 
-    cp frontend/extension.example.json frontend/extension.json
+    if [ -z "$SERVER_HOST" ]; then
+        echo "⚠️  No value provided, creating from template with placeholder <YOUR-SERVER> (edit it manually before use)."
+        cp frontend/extension.example.json frontend/extension.json
+    else
+        sed "s/<YOUR-SERVER>/${SERVER_HOST}/g" frontend/extension.example.json > frontend/extension.json
+    fi
 
     echo ""
     echo "✅ frontend/extension.json created!"
-    echo ""
-    echo "👉 Please update the server URL/IP:"
     echo "----------------------------------------"
 
     cat frontend/extension.json
 
     echo "----------------------------------------"
-    echo ""
-    echo "⚠️  IMPORTANT:"
-    echo "Replace <YOUR-SERVER> with your actual IP or hostname!"
 fi
 
 # Generate self-signed TLS certificate matching this server
@@ -81,7 +103,12 @@ if [[ "$REGEN_CERT" =~ ^[Yy]$ ]]; then
         echo "⚠️  openssl not found, skipping certificate generation."
         echo "👉 Generate certs/cert.pem and certs/key.pem manually before starting the app."
     else
-        read -p "➡️  Enter the IP or hostname clients will use to reach this backend: " CERT_HOST
+        if [ -n "$SERVER_HOST" ]; then
+            read -p "➡️  Enter the IP or hostname clients will use to reach this backend [${SERVER_HOST}]: " CERT_HOST
+            CERT_HOST="${CERT_HOST:-$SERVER_HOST}"
+        else
+            read -p "➡️  Enter the IP or hostname clients will use to reach this backend: " CERT_HOST
+        fi
 
         if [ -z "$CERT_HOST" ]; then
             echo "⚠️  No value provided, skipping certificate generation."
