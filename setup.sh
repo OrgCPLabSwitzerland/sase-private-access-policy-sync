@@ -5,12 +5,18 @@ echo "Setting up SASE PA Unified Policy Extension"
 echo "-------------------------------------------"
 
 # Create venv
-#python3 -m venv venv
-#source venv/bin/activate
+if [ ! -d venv ]; then
+    echo ""
+    echo "➡️  Creating Python virtual environment..."
+    python3 -m venv venv
+fi
+source venv/bin/activate
 
 # Install deps
-#pip install --upgrade pip
-#pip install -r requirements.txt
+echo ""
+echo "➡️  Installing Python dependencies..."
+pip install --upgrade pip
+pip install -r requirements.txt
 
 # Create config if missing
 if [ ! -f config/config.json ]; then
@@ -144,7 +150,7 @@ Type=simple
 User=${SERVICE_USER}
 WorkingDirectory=${SCRIPT_DIR}
 ExecStart=${SCRIPT_DIR}/start.sh
-Restart=on-failure
+Restart=always
 RestartSec=5
 
 [Install]
