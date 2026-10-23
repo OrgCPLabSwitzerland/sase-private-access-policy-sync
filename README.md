@@ -89,7 +89,7 @@ cd sase-private-access-policy-sync
 The setup script prepares everything automatically and walks you through each step:
 
 ```bash id="s3n9aa"
-./setup.sh
+sudo ./setup.sh
 ```
 
 What it does:
@@ -211,7 +211,7 @@ If using self-signed certificates:
 git clone https://github.com/OrgCPLabSwitzerland/sase-private-access-policy-sync
 cd sase-private-access-policy-sync
 
-./setup.sh
+sudo ./setup.sh
 ```
 
 `./start.sh` is only needed if you didn't install the systemd service during setup.
