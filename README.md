@@ -27,7 +27,7 @@ SASE Private Access Policy Sync is a SmartConsole extension backend that automat
 ## System Requirements
 
 * Linux server (Ubuntu recommended)
-* Python 3.10+
+* Python 3.10+ with the `venv` and `pip` modules available (Ubuntu/Debian: `sudo apt install python3-venv python3-pip`)
 * Access to Check Point Management API
 * Check Point SASE API credentials
 

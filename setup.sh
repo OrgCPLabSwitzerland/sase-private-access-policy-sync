@@ -15,6 +15,14 @@ if [ ! -d venv ]; then
     echo "➡️  Creating Python virtual environment..."
     python3 -m venv venv
 fi
+if [ ! -f venv/bin/activate ]; then
+    echo ""
+    echo "❌ Failed to create the virtual environment."
+    echo "👉 On Ubuntu/Debian, install the required packages and re-run this script:"
+    echo "     sudo apt install python3-venv python3-pip"
+    rm -rf venv
+    exit 1
+fi
 source venv/bin/activate
 
 # Install deps
