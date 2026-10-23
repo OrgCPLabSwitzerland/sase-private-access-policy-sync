@@ -86,7 +86,6 @@ cd sase-private-access-policy-sync
 The setup script prepares everything automatically and walks you through each step:
 
 ```bash id="s3n9aa"
-chmod +x setup.sh
 ./setup.sh
 ```
 
@@ -205,8 +204,6 @@ If using self-signed certificates:
 ```bash id="q1w8zx"
 git clone https://github.com/OrgCPLabSwitzerland/sase-private-access-policy-sync
 cd sase-private-access-policy-sync
-
-chmod +x setup.sh start.sh
 
 ./setup.sh
 ./start.sh

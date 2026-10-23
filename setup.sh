@@ -160,7 +160,7 @@ echo "----------------------------------------"
 
 echo ""
 echo "➡️ Load extension in SmartConsole:"
-echo "https://<YOUR-SERVER>:5000/extension.json"
+echo "https://${SERVER_HOST:-<YOUR-SERVER>}:5000/extension.json"
 pause
 
 # Create systemd service
