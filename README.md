@@ -31,6 +31,7 @@ SASE Private Access Policy Sync is a SmartConsole extension backend that automat
 * Access to Check Point Management API
 * Check Point SASE API credentials
 * Run as a regular (non-root) user with `sudo` privileges — do **not** log in as `root` and run the scripts directly, this has caused setup/run failures. Use `sudo` from a normal account instead.
+  (Reason: `setup.sh` detects the invoking user via `$SUDO_USER`, which `sudo` sets but a direct `root` login doesn't, so the systemd service ends up misconfigured.)
 
 ## Connectivity Requirements
 

@@ -9,6 +9,13 @@ pause() {
     read -p "⏸️  Press Enter to continue..." _
 }
 
+# Must be run via 'sudo' from a regular user, not a direct root login (breaks $SUDO_USER-based service setup)
+if [ "$EUID" -eq 0 ] && [ -z "$SUDO_USER" ]; then
+    echo "❌  This script was run while logged in directly as root."
+    echo "👉 Log in as a regular user and run it with: sudo ./setup.sh"
+    exit 1
+fi
+
 # Create venv
 if [ ! -d venv ]; then
     echo ""
