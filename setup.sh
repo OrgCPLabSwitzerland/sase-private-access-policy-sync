@@ -71,7 +71,7 @@ pause
 if [ ! -f frontend/extension.json ]; then
     echo ""
     echo "⚠️  frontend/extension.json not found"
-    read -p "➡️  Enter the IP or hostname clients (SmartConsole) will use to reach this backend: " SERVER_HOST
+    read -p "➡️  Enter IP or hostname (if DNS resolution works) where you host this extension (this server in most cases): " SERVER_HOST
 
     if [ -z "$SERVER_HOST" ]; then
         echo "⚠️  No value provided, creating from template with placeholder <YOUR-SERVER> (edit it manually before use)."
@@ -107,10 +107,10 @@ if [[ "$REGEN_CERT" =~ ^[Yy]$ ]]; then
         echo "👉 Generate certs/cert.pem and certs/key.pem manually before starting the app."
     else
         if [ -n "$SERVER_HOST" ]; then
-            read -p "➡️  Enter the IP or hostname clients will use to reach this backend [${SERVER_HOST}]: " CERT_HOST
+            read -p "➡️  Enter IP or hostname (if DNS resolution works) where you host this extension (this server in most cases) [${SERVER_HOST}]: " CERT_HOST
             CERT_HOST="${CERT_HOST:-$SERVER_HOST}"
         else
-            read -p "➡️  Enter the IP or hostname clients will use to reach this backend: " CERT_HOST
+            read -p "➡️  Enter IP or hostname (if DNS resolution works) where you host this extension (this server in most cases): " CERT_HOST
         fi
 
         if [ -z "$CERT_HOST" ]; then

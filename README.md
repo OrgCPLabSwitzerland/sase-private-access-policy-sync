@@ -77,8 +77,8 @@ SASE-Private-Access-Layer
 ## 1. Clone Repository
 
 ```bash id="c8q2lm"
-git clone <repository-url>
-cd sase-unified-pa-policy
+git clone https://github.com/OrgCPLabSwitzerland/sase-private-access-policy-sync
+cd sase-private-access-policy-sync
 ```
 
 ## 2. Run Setup (Recommended)
@@ -203,8 +203,8 @@ If using self-signed certificates:
 # Quick Start
 
 ```bash id="q1w8zx"
-git clone <repository-url>
-cd sase-unified-pa-policy
+git clone https://github.com/OrgCPLabSwitzerland/sase-private-access-policy-sync
+cd sase-private-access-policy-sync
 
 chmod +x setup.sh start.sh
 
