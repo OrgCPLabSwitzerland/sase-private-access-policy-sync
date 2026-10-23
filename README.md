@@ -197,6 +197,14 @@ https://<SERVER>:5000/extension.json
 * Ensure port `5000` is open
 * Ensure server is reachable from SmartConsole
 
+If the backend is running as a systemd service, check its logs with:
+
+```bash id="jrn1aa"
+sudo journalctl -u sase-private-access.service -f
+```
+
+Drop `-f` to view past logs instead of following in real time, or add `-n 100` to show just the last 100 lines.
+
 ## Certificate Issues
 
 If using self-signed certificates:
