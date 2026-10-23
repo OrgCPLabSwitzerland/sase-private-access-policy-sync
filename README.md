@@ -30,6 +30,7 @@ SASE Private Access Policy Sync is a SmartConsole extension backend that automat
 * Python 3.10+ with the `venv` and `pip` modules available (Ubuntu/Debian: `sudo apt install python3-venv python3-pip`)
 * Access to Check Point Management API
 * Check Point SASE API credentials
+* Run as a regular (non-root) user with `sudo` privileges — do **not** log in as `root` and run the scripts directly, this has caused setup/run failures. Use `sudo` from a normal account instead.
 
 ## Connectivity Requirements
 
@@ -82,6 +83,8 @@ cd sase-private-access-policy-sync
 ```
 
 ## 2. Run Setup (Recommended)
+
+> ⚠️ Run this as a regular user with `sudo` privileges, not while logged in directly as `root` — running as `root` has been known to cause failures.
 
 The setup script prepares everything automatically and walks you through each step:
 
