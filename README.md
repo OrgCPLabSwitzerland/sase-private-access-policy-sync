@@ -103,8 +103,11 @@ The script pauses after each stage so you can review the output before continuin
 
 ## 3. Start Backend
 
+If you installed the systemd service during setup, the backend is already running and will auto-start on boot — no further action needed.
+
+To run it manually instead (e.g. for testing, or if you skipped the systemd service):
+
 ```bash id="z2m8kd"
-chmod +x start.sh
 ./start.sh
 ```
 
@@ -206,8 +209,9 @@ git clone https://github.com/OrgCPLabSwitzerland/sase-private-access-policy-sync
 cd sase-private-access-policy-sync
 
 ./setup.sh
-./start.sh
 ```
+
+`./start.sh` is only needed if you didn't install the systemd service during setup.
 
 ---
 
