@@ -224,7 +224,6 @@ sudo ./setup.sh
 To remove everything `setup.sh` created (systemd service, virtual environment, and optionally `config/config.json`, `frontend/extension.json`, and the TLS certificate):
 
 ```bash id="cln9aa"
-chmod +x cleanup.sh
 ./cleanup.sh
 ```
 
